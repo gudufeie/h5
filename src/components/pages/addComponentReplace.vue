@@ -17,7 +17,7 @@
                         <p style="line-height:50px;">
                             <span><img style="width:3%;margin-right:5px;" src="../../assets/icon/star.png"></span>描述
                         </p>
-                        <textarea rows="10" cols="20" placeholder="请输入点检描述" v-model="text" :disabled='isDelay'></textarea>
+                        <textarea rows="10" cols="20" placeholder="请输入更换描述" v-model="text" :disabled='isDelay'></textarea>
                     </div>
                     <div class="shoot_picture">
                         <p style="line-height:50px;">
@@ -139,6 +139,8 @@ export default {
             delayTime: null,
             isDelay: false,
             replaceConfig:{},
+            url:'',
+            departmentInfo:''
         }
     },
     computed: {
@@ -255,9 +257,7 @@ export default {
         this.$http(this.$API.addReplaceRecord, data, true).then((res) => {
           if(res){
             this.$commom.alert('添加成功');
-            this.$router.push({
-                name: 'addReplace'
-            })
+            window.location.href = this.url + '/#/manage/deviceDetailManage/addReplace?department='+this.departmentInfo;
           }
         });
       },
@@ -368,16 +368,22 @@ export default {
         this.$http(this.$API.delayedReplace,data,true).then(res => {
           if(res) {
             this.$commom.alert(`延长至${this.delayTime}更换`);
-            this.$router.push({ name : 'addReplace'});
+            window.location.href = this.url + '/#/manage/deviceDetailManage/addReplace?department='+this.departmentInfo;
           } else {
             this.$commom.alert('延后失败');
           }
         })
-      }
+      },
+
+      getDomin: function(){
+        this.url = window.location.protocol +'//'+ window.location.host;
+      },
     },
     created: function(){
-        this.getDeviceInfo()
-        this.getLeaderList()
+        this.getDeviceInfo();
+        this.getLeaderList();
+        this.getDomin();
+        this.departmentInfo = localStorage.getItem('curDepartment')
     }
 }
 </script>

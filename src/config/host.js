@@ -12,7 +12,7 @@ if (domain.indexOf("test") >= 0) {
   hostConfig.pcHostUrl = 'https://industry-cloud-backend-dev.uworks.cc';
 } else {
   hostConfig.hostUrl = 'https://industry-wx.trenshion.com';
-  // hostConfig.hostUrl = 'http://10.234.17.185:9999';
+  // hostConfig.hostUrl = 'http://10.234.16.168:9999';
   // hostConfig.hostUrl = 'https://backend.iuindustry.com';
   // hostConfig.pcHostUrl = 'https://api.iuindustry.com';
 }

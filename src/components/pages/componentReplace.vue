@@ -231,6 +231,9 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+    .info_wrap table td{
+        overflow: unset !important;
+    }
 </style>
 
 

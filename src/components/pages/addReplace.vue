@@ -12,7 +12,8 @@
           :deviceName="departmentDetail ? departmentDetail.departmentName : '未选择'">
         </device-selected>
         <div class="changeMore" @click="changeMore">{{checkMore}} <span class="iconfont icon-shaixuan"></span></div>
-        <div @click="backToHomepage" class="backTo"><img src="../../assets/icon/backHome.png" alt=""></div>
+        <div class="scan" @click="scanAdd"><span class="iconfont">&#xe648;</span></div>
+        <div @click="backToHomepage" class="backTo"><span class="iconfont">&#xe610;</span></div>
       </div>
       <div class="MoreDataP" v-if="showMore">
         <div class="deviceName">设备名称 <input type="text" placeholder="请输入设备名称" v-model="deviceNameChoose"></div>
@@ -62,9 +63,6 @@
         <span>操作人</span>
       </div>
       <div class="footer">
-        <div class="addFunction" @click="scanAdd" v-if="scanShow">
-          <button>扫码添加</button>
-        </div>
         <tabbar style="color: #ffffff;font-size:14px;">
           <tabbar-item
             @on-item-click="spotCheck"
@@ -92,7 +90,7 @@
               <tr v-for="(record,index) in replaceManageData" :key="index" @click="getDeviceReplaceDetail(record)">
                 <td>{{record.device_name}}</td>
                 <td>{{record.code}}</td>
-                <td>{{record.maintain_time}}
+                <td>{{record.maintain_time == 0?'-':record.maintain_time}}
                   <span v-if="record.maintain_time_unit == 1">天</span>
                   <span v-else-if="record.maintain_time_unit == 2">周</span>
                   <span v-else-if="record.maintain_time_unit == 3">月</span>
@@ -241,6 +239,7 @@
 
       this.departmentInfo = JSON.parse(this.$route.query.department);
       this.departmentId = this.departmentInfo.id;
+      localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
       
       for (let item of userInfo.roleAction) {
         this.userActionMap[item.pageId] = item;
@@ -523,6 +522,7 @@
         }else{
           this.getReplaceReocrdNum();
         }
+        localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
       },
 
       //展开更多
@@ -608,19 +608,30 @@
     top: 0px;
     z-index: 110;
     .changeDep{
-        width: 40%;
+        width: 28%;
         height: 50px;
         font-size: 20px;
         line-height: 50px;
-        /*padding: 10px 0 0 10px;*/
+        padding: 0 0 0 10px;
         color: #ffffff;
     }
     .backTo{
+      width: 20%;
+      color:#fff;
+      line-height: 50px;
       position: absolute;
-      right: 11px;
+      right:0px;
+      .iconfont{
+        font-size: 18px;
+      }
+    }
+    .scan{
+      width: 20%;
+      color:#fff;
+      line-height: 50px;
     }
     .changeMore{
-        width: 40%;
+        width: 28%;
         height: 50px;
         font-size: 16px;
         line-height: 50px;
@@ -815,37 +826,7 @@
         }
 
       }
-      // .addFunction{
-      //   margin: 0 25%;
-      //   height: 45px;
-      //   width: 50%;
-      //   position: absolute;
-      //   bottom: 70px;
-      //   background: #3967DC;
-      //   border-radius: 20px;
-      //   text-align: center;
-      //   line-height: 40px;
-      //   font-size: 16px;
-      //   color: #ffffff;
-      //   z-index: 999;
-      // }
-      .footer .addFunction{
-        position:fixed;
-        bottom: 70px;
-        z-index: 999;
-        width:100%;
-        text-align: center;
-      }
-      .footer .addFunction button{
-          border-radius: 20px;
-          font-size: 16px;
-          height: 45px;
-          width: 50%;
-          border: none;
-          background-color: #456de6;
-          color:#fff;
 
-      }
       .weui-tabbar{
         background: rgba(0,0,0,0.3);
       }
@@ -979,11 +960,8 @@
     top: 160px;
     position: fixed;
     bottom: 130px;
-    height: 50%;
+    height: 60%;
   }
-  // .mescroll {
-  //   height: 60%;
-  // }
   .record_scroll{
     top: 160px;
     position: fixed;

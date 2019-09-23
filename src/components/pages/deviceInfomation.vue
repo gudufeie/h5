@@ -43,11 +43,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(record,index) in deviceDotCheck" :key="index">
+              <tr v-for="(record,index) in deviceDotCheck" :key="index" @click="deviceWorkSheetDetail(record)">
                 <td>{{record.name}}</td>
                 <td>{{record.update_time | formatDate}}</td>
                 <td>{{record.operatorName}}</td>
-                <td>{{record.check_result}}</td>
+                <td>{{record.check_result == 1?'正常':record.check_result == 2?'轻度故障':record.check_result == 3?'中度故障':'重故障'}}</td>
               </tr>
             <tr class="openmore">
               <td></td>
@@ -67,11 +67,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(record,index) in componentDotCheck" :key="index">
-                <td>{{record.name}}</td>
+              <tr v-for="(record,index) in componentDotCheck" :key="index" @click="compWorkSheetDetail(record)">
+                <td>{{record.componentName}}</td>
                 <td>{{record.update_time | formatDate}}</td>
                 <td>{{record.operatorName}}</td>
-                <td>{{record.check_result}}</td>
+                <td>{{record.check_result == 1?'正常':record.check_result == 2?'轻度故障':record.check_result == 3?'中度故障':'重故障'}}</td>
               </tr>
               <tr class="openmore">
               <td></td>
@@ -99,7 +99,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(record,index) in deviceReplace" :key="index">
+              <tr v-for="(record,index) in deviceReplace" :key="index" @click="deviceReplaceRecordDetail(record)">
                 <td>{{record.name}}</td>
                 <td>{{record.code}}</td>
                 <td style="width:150px;">{{record.update_time | formatDate}}</td>
@@ -123,7 +123,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(record,index) in componentReplace" :key="index">
+              <tr v-for="(record,index) in componentReplace" :key="index" @click="compReplaceRecordDetail(record)">
                 <td>{{record.name}}</td>
                 <td>{{record.code}}</td>
                 <td style="width:150px;">{{record.update_time | formatDate}}</td>
@@ -321,81 +321,37 @@
         //当前设备的点巡检记录
         this.$http(this.$API.loadDeviceCheckRecordByDeviceId,{deviceId:this.deviceId},true).then( (res) => {
           if(res){
-            if(res.length >10){
-              res=res.slice(0,10)
+            if(res.length >3){
+              res=res.slice(0,3)
             }
-            for(let i in res){
-              let dic ={}
-              dic.name = res[i].name;
-              dic.update_time = res[i].update_time;
-              dic.operatorName = res[i].operatorName;
-              if(res[i].check_result == 1){
-                dic.check_result = '正常';
-              }else if(res[i].check_result == 2){
-                dic.check_result = '轻微故障';
-              }else if(res[i].check_result == 3){
-                dic.check_result = '中度故障';
-              }else{
-                dic.check_result = '重故障';
-              }
-              that.deviceDotCheck.push(dic)
-            }
+          that.deviceDotCheck = res
           }
         });
         //当前设备的更换记录
         this.$http(this.$API.loadDeviceAllReplaceRecord,{deviceId:this.deviceId},true).then( (res) => {
           if(res){
-            if(res.length >10){
-              res=res.slice(0,10)
+            if(res.length >3){
+              res=res.slice(0,3)
             }
-            for(let i in res){
-              let dic ={}
-              dic.name = res[i].name;
-              dic.code = res[i].code;
-              dic.update_time = res[i].update_time;
-              dic.operatorName = res[i].operatorName;
-              that.deviceReplace.push(dic)
-            }
+          that.deviceReplace = res
           }
         });
         //当前设备下所有部件的点巡检记录
         this.$http(this.$API.loadComponentCheckRecord,{deviceId:this.deviceId},true).then( (res) => {
           if(res){
-            if(res.length >10){
-              res=res.slice(0,10)
+            if(res.length >3){
+              res=res.slice(0,3)
             }
-            for(let i in res){
-              let dic ={}
-              dic.name = res[i].componentName;
-              dic.update_time = res[i].update_time;
-              dic.operatorName = res[i].operatorName;
-              if(res[i].check_result == 1){
-                dic.check_result = '正常';
-              }else if(res[i].check_result == 2){
-                dic.check_result = '轻微故障';
-              }else if(res[i].check_result == 3){
-                dic.check_result = '中度故障';
-              }else{
-                 dic.check_result = '重度故障';
-              }
-              that.componentDotCheck.push(dic)
-            }
+            that.componentDotCheck = res
           }
         });
         //当前设备下所有部件的更换记录
         this.$http(this.$API.loadCompReplaceRecord,{deviceId:this.deviceId},true).then( (res) => {
           if(res){
-            if(res.length >10){
-              res=res.slice(0,10)
+            if(res.length >3){
+              res=res.slice(0,3)
             }
-            for(let i in res){
-              let dic ={}
-              dic.name = res[i].name;
-              dic.code = res[i].code;
-              dic.update_time = res[i].update_time;
-              dic.operator = res[i].operator;
-              that.componentReplace.push(dic)
-            }
+          that.componentReplace = res
           }
         });
       },
@@ -616,6 +572,53 @@
            var y = b[attr];
            return ((x<y)?-1:(x>y)?1:0)
         }
+      },
+
+      deviceWorkSheetDetail:function(config){
+        this.$router.push({
+          name: `workSheetDetail`,
+          query: {
+            CheckInfo:config,
+            queryName: true,
+            name: 'deviceRecord'
+          }
+        })
+      },
+
+      compWorkSheetDetail:function(config){
+        this.$router.push({
+          name: `workSheetDetail`,
+          query: {
+            CheckInfo:config,
+            queryName: true,
+            name: 'componentRecord'
+          }
+        })
+      },
+
+      deviceReplaceRecordDetail: function(record){
+        this.$router.push({
+          name:'replaceDetail',
+          query:{
+            component:'',
+            device:record,
+            deviceId:this.deviceId,
+            type:'device'
+          }
+        })
+      },
+
+      // 查看更换记录详情
+      compReplaceRecordDetail: function(config){
+        this.$router.push({
+            name:'replaceDetail',
+            query:{
+              component:config,
+              device:this.deviceInfo,
+              deviceId:this.deviceId,
+              type:'component'
+            }
+        })
       },
     },
     mounted(){

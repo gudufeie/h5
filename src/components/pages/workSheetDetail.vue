@@ -125,7 +125,6 @@ export default {
             var param = {}
             this.CheckInfo = this.$route.query
             if(!this.CheckInfo.queryName){
-                console.log('1')
                 this.checkRecordId = this.CheckInfo.id   
                 this.getWorkSheet(this.checkRecordId);        
                 this.checkTime = this.CheckInfo.checkTime
@@ -142,7 +141,6 @@ export default {
                 }
                 // 获取点巡检记录详情
                 this.$http(this.$API.loadCheckDetail, param, true).then((res)=>{
-                    console.log('1',res)
                     this.deviceName = res.deviceName
                     this.deviceCode = res.code
                     this.departmentName = res.departmentName

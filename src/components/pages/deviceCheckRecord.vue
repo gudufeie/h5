@@ -102,7 +102,7 @@ export default {
                 name: 'deviceRecord'
             }
         })
-        },
+      },
       //展开更多
       changeMore: function () {
         this.showMore = true;

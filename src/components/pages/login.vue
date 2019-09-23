@@ -71,33 +71,33 @@
     },
     created: function () {
       this.$store.commit('changeMode', 0);
-      const that = this;
-      if (this.$route.query.openId) {
-        if (this.$route.query.status == 'true') {
-            this.$http(this.$API.getUserInfo, {}).then((res) => {
-              if (res) {
-                that.$store.commit('saveUser', res);
-                if (this.$route.query.deviceId && this.$route.query.deviceId !== 'null') {
-                  this.$router.push({name: 'componentCheck', query: {deviceId: this.$route.query.deviceId}})
-                } else {
-                  that.showDefaultPage(res);
-                }
-              }else {
-                that.status = true;
-              }
-          })
-        } else {
-          this.status = true;
-        }
-      }else if(this.$route.query.stop=='1'){
-          this.status = true;
-      } else {
-        this.$http(this.$API.getWxCode, {callbackUrl: location.href}, true).then((res) => {
-          if (res) {
-            location.href = res;
-          }
-        });
-      }
+      // const that = this;
+      // if (this.$route.query.openId) {
+      //   if (this.$route.query.status == 'true') {
+      //       this.$http(this.$API.getUserInfo, {}).then((res) => {
+      //         if (res) {
+      //           that.$store.commit('saveUser', res);
+      //           if (this.$route.query.deviceId && this.$route.query.deviceId !== 'null') {
+      //             this.$router.push({name: 'componentCheck', query: {deviceId: this.$route.query.deviceId}})
+      //           } else {
+      //             that.showDefaultPage(res);
+      //           }
+      //         }else {
+      //           that.status = true;
+      //         }
+      //     })
+      //   } else {
+      //     this.status = true;
+      //   }
+      // }else if(this.$route.query.stop=='1'){
+      //     this.status = true;
+      // } else {
+      //   this.$http(this.$API.getWxCode, {callbackUrl: location.href}, true).then((res) => {
+      //     if (res) {
+      //       location.href = res;
+      //     }
+      //   });
+      // }
     },
     methods: {
       //获取验证码

@@ -10,7 +10,8 @@
           :deviceName="departmentDetail ? departmentDetail.departmentName : '未选择'">
         </device-selected>
         <div class="changeMore" @click="changeMore">{{checkMore}} <span class="iconfont icon-shaixuan"></span></div>
-        <div @click="backToHomepage" class="backTo"><img src="../../assets/icon/backHome.png" alt=""></div>
+        <div class="scan" @click="scanAdd"><span class="iconfont">&#xe648;</span></div>
+        <div @click="backToHomepage" class="backTo"><span class="iconfont">&#xe610;</span></div>
       </div>
       <div class="MoreDataP" v-if="showMore">
         <div class="deviceName">设备名称 <input type="text" placeholder="请输入设备名称" v-model="deviceNameSpot"></div>
@@ -75,9 +76,6 @@
           </div>
       </div>
       <div class="footer">
-        <div class="add_wrap" v-if="scanShow" @click="scanAdd">
-            <button>扫码添加</button>
-        </div>
         <grid :show-lr-borders="false" :show-vertical-dividers="false">
             <grid-item label='点巡检'
             @on-item-click="spotCheckClick"
@@ -217,6 +215,7 @@ export default {
     }
     this.departmentInfo = JSON.parse(this.$route.query.department);
     this.departmentId = this.departmentInfo.id;
+    localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
 
     for (let item of userInfo.roleAction) {
       this.userActionMap[item.pageId] = item;
@@ -511,6 +510,7 @@ export default {
       }else{
         this.getCheckRecordNum();
       }
+      localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
     },
 
     // 条件筛选
@@ -635,19 +635,30 @@ export default {
     background: #22233f;
     text-align: center;
     .changeDep{
-        width: 40%;
+        width: 28%;
         height: 50px;
         font-size: 20px;
         line-height: 50px;
-        /*padding: 10px 0 0 10px;*/
+        padding: 0 0 0 10px;
         color: #ffffff;
     }
     .backTo{
+      width: 20%;
+      color:#fff;
+      line-height: 50px;
       position: absolute;
-      right: 11px;
+      right:0px;
+      .iconfont{
+        font-size: 18px;
+      }
+    }
+    .scan{
+      width: 20%;
+      color:#fff;
+      line-height: 50px;
     }
     .changeMore{
-        width: 40%;
+        width: 28%;
         height: 50px;
         font-size: 16px;
         line-height: 50px;
@@ -746,7 +757,7 @@ export default {
     top: 165px;
     position: fixed;
     bottom: 130px;
-    height: 50%;
+    height: 60%;
   }
 
   .record_scroll{
@@ -850,20 +861,6 @@ export default {
     }
     .weui-grid{
         padding:0px 10px 0px 10px !important;
-    }
-    .footer .add_wrap{
-        margin-bottom: 10px;
-        text-align: center;
-    }
-    .footer .add_wrap button{
-        border-radius: 20px;
-        font-size: 16px;
-        height: 45px;
-        width: 50%;
-        border: none;
-        background-color: #456de6;
-        color:#fff;
-
     }
     .footer .weui-grid__label{
         color: #fff;

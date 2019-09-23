@@ -3,7 +3,7 @@
     <div class="header">
       <div class="header-content"  @click="openPoup">
         <div class="name">
-          {{deviceName ? deviceName: '未选择'}}
+          <span calss="deviceName">{{deviceName ? deviceName: '未选择'}}</span>
           <img style="margin-left: 5px" src="../../assets/icon/down.png" alt="">
         </div>
       </div>
@@ -335,7 +335,11 @@ export default {
 
 <style lang="less" scoped>
   .header {
-     border-bottom: unset !important;
+    border-bottom: unset !important;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-break:keep-all;
   }
   .device-selected{
     .header-content {

@@ -151,7 +151,9 @@ export default {
             departmentId:'',
             text:'',
             chooseChecker:'',
-            departmentName:''
+            departmentName:'',
+            url:'',
+            departmentInfo:''
         }
     },
     methods:{
@@ -260,9 +262,7 @@ export default {
         this.$http(this.$API.addCheckRecord,data,true).then( (res) => {
           if(res){
             this.$commom.alert('添加成功');
-            this.$router.push({
-                name: 'spotCheck'
-            })
+            window.location.href = this.url + '/#/operaionManage/spotCheck?department='+this.departmentInfo;
           }
         });
       },
@@ -297,12 +297,18 @@ export default {
           this.mainPageShow = true;
           this.chooseCheckerShow =false;
           this.chooseChecker = checkerName;
-      }
+      },
+
+      getDomin: function(){
+        this.url = window.location.protocol +'//'+ window.location.host;
+      },
     },
     created:function(){
         this.getComponentInfo();
         this.loadComponentDetail();
         this.loadChecker();
+        this.getDomin();
+        this.departmentInfo = localStorage.getItem('curDepartment')
     },
 }
 </script>

@@ -77,7 +77,7 @@ export default {
           window.location.href = this.url + '/#/operaionManage/spotCheck?department='+JSON.stringify(this.curDepartment);
         },
         changeRecordView: function(){
-            window.location.href = this.url + '/#/manage/deviceDetailManage/addReplace?department='+JSON.stringify(this.curDepartment);
+          window.location.href = this.url + '/#/manage/deviceDetailManage/addReplace?department='+JSON.stringify(this.curDepartment);
         },
 
         // 统计最近七天处理的数量
@@ -120,6 +120,7 @@ export default {
         },
 
         departmentSelected: function(params) {
+            
             this.curDepartment = params.department;
             this.departmentId = this.curDepartment.id;
             this.getRecordsData();
@@ -135,13 +136,17 @@ export default {
                 left: 'center',
               },
               legend: {
+                textStyle: {
+                  color: '#fff'
+                },
+                top: 'top',
                 data:['点巡检工作记录','更换工作记录']
               },
               grid: {
-                  top: 110,
-                  left: 20,
-                  right: 15,
-                  height: 160,
+                  top: 50,
+                  left: 25,
+                  right: 25,
+                  height: 150,
                   containLabel:true
               },
               tooltip: {
@@ -175,11 +180,11 @@ export default {
                           formatter: function (params) {
                               return echarts.format.formatTime('yyyy-MM-dd', params.value);
                           },
-                          backgroundColor: '#004E52'
+                          backgroundColor: '#456de6'
                       },
                       handle: {
                           show: true,
-                          color: '#004E52'
+                          color: '#456de6'
                       }
                   },
                   splitLine: {
@@ -200,27 +205,27 @@ export default {
                     }
                   },
                   axisLabel: {
-                      inside: true,
+                    //   inside: true,
                       formatter: '{value}\n',
                       color: '#fff',
                   },
                   z: 10
               },
-              dataZoom: [{
-                  type: 'inside',
-                  throttle: 50
-              }],
+            //   dataZoom: [{
+            //       type: 'inside',
+            //       throttle: 50
+            //   }],
               series: [
                   {
                       name:'点巡检工作记录',
                       type:'line',
                       smooth: true,
                       symbol: 'circle',
-                      symbolSize: 5,
+                      symbolSize: 7,
                       sampling: 'average',
                       itemStyle: {
                           normal: {
-                              color: '#8ec6ad'
+                              color: '#456de6'
                           }
                       },
                       stack: 'a',
@@ -232,7 +237,7 @@ export default {
                       smooth:true,
                       stack: 'a',
                       symbol: 'circle',
-                      symbolSize: 5,
+                      symbolSize: 7,
                       sampling: 'average',
                       itemStyle: {
                           normal: {
@@ -249,7 +254,6 @@ export default {
 }
 </script>
 <style>
-    /** { touch-action: none; }*/
     body{
         background-color: #22233f;
         height: 100%;
@@ -285,7 +289,7 @@ export default {
     }
     .chart{
       width:100%;
-      height: 60%;
+      height: 48%;
     }
     .menus{
         display: flex;
@@ -357,6 +361,9 @@ export default {
         position: absolute;
         z-index: 99;
         top: 0;
+    }
+    .chart{
+        padding-top: 60px;
     }
 </style>
 

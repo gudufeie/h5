@@ -138,7 +138,7 @@ export default {
                 queryName: true,
                 name: 'componentRecord'
             }
-        })
+          })
         },
         // 获取设备下所有部件的点巡检记录
         loadCheckRecord: function(){
