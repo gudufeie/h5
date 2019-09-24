@@ -80,26 +80,29 @@ export default {
           window.location.href = this.url + '/#/manage/deviceDetailManage/addReplace?department='+JSON.stringify(this.curDepartment);
         },
 
-        // 统计最近七天处理的数量
-        getRecordsData: function(){
+        getReplaceData: function(){
             this.replaceRecordMonth = [];
-            this.spotCheckMonth = [];
             this.$http(this.$API.getReplaceRecordByMonth, {departmentId:this.departmentId}, true).then((res)=>{
                 if(res){
                     for(var item of res){
                         this.replaceRecordMonth.push([item.createTime, parseInt(item.count)]);
                     }
-                }
-            this.drawLine();
+                    this.drawLine();
+                }        
             })
+        },
+
+        // 统计最近七天处理的数量
+        getRecordsData: function(){
+            this.spotCheckMonth = [];
             //运维工单信息
             this.$http(this.$API.getCheckRecordByMonth, {departmentId:this.departmentId}, true).then((res)=>{
                 if(res){
                     for(var item of res){
                         this.spotCheckMonth.push([item.createTime, parseInt(item.count)]);
                     }
-                }
-            this.drawLine();
+                    this.getReplaceData();
+                }       
             })
         },
         
@@ -167,7 +170,7 @@ export default {
                     color: '#fff',
                   },
                   axisPointer: {
-                      value: '2019-08-01',
+                      value: this.spotCheckMonth[0][0],
                       snap: true,
                       color: '#fff',
                       lineStyle: {
@@ -211,10 +214,6 @@ export default {
                   },
                   z: 10
               },
-            //   dataZoom: [{
-            //       type: 'inside',
-            //       throttle: 50
-            //   }],
               series: [
                   {
                       name:'点巡检工作记录',
@@ -228,14 +227,12 @@ export default {
                               color: '#456de6'
                           }
                       },
-                      stack: 'a',
                       data: this.spotCheckMonth
                   },
                   {
                       name:'更换工作记录',
                       type:'line',
                       smooth:true,
-                      stack: 'a',
                       symbol: 'circle',
                       symbolSize: 7,
                       sampling: 'average',
