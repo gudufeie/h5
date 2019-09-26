@@ -52,7 +52,7 @@
             <p v-else-if="item.handle_type == 2">转办</p>
             <p v-else-if="item.handle_type == 3" style="color:#456de6">解决</p>
             <p v-else-if="item.handle_type == 4" style="color:red">驳回</p>
-            <p v-else style="color:red">未处理</p>
+            <p v-else style="color:red">异常提醒</p>
           </div>
         </div>
       </div>

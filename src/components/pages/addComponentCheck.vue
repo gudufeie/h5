@@ -179,8 +179,7 @@ export default {
 
       //上传图片
       uploadImg: function(fileUrl){
-        let that = this;
-        console.log('1')         
+        let that = this;        
          let config = {
             withCredentials: true,
             headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
@@ -190,7 +189,6 @@ export default {
         }
         this.loading = true
         this.$axios.post(this.$API.upload,qs.stringify(options),config).then( (res) => {
-          console.log('3')
           if(res.data.success){
             this.imgList.unshift(res.data.data);
             this.loading = false
@@ -262,7 +260,12 @@ export default {
         this.$http(this.$API.addCheckRecord,data,true).then( (res) => {
           if(res){
             this.$commom.alert('添加成功');
-            window.location.href = this.url + '/#/operaionManage/spotCheck?department='+this.departmentInfo;
+            this.$router.push({
+                name: `componentCheck`,
+                query: {
+                deviceId:this.deviceId,
+                }
+            })
           }
         });
       },

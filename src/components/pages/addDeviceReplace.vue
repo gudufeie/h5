@@ -240,6 +240,7 @@ export default {
           time: this.time,
           deviceId: this.deviceInfo.device_id,
           componentId:-1,
+          
           description: this.text,
           picts: this.imgList.join(','),
           leader: this.leader,

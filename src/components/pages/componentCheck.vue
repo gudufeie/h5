@@ -49,17 +49,17 @@
                     <tbody>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check1-'+index" @click="addComponentCheck(item)" v-show="item.checkResult == 1">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime}}</td>
+                        <td>{{item.lastCheckTime | formatDate}}</td>
                         <td style="color:red">可执行</td>
                     </tr>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check2-'+index" @click="spotCheckDetail(item)" v-show="item.checkResult == 3">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime}}</td>
+                        <td>{{item.lastCheckTime | formatDate}}</td>
                         <td>已完成</td>
                     </tr>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check3-'+index" v-show="item.checkResult == 2">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime}}</td>
+                        <td>{{item.lastCheckTime | formatDate}}</td>
                         <td>不需要</td>
                     </tr>
                     </tbody>
@@ -119,16 +119,21 @@ export default {
               });
             }else {
                 this.deviceInfo = this.$route.query.deviceInfo
-                this.departmentId = this.deviceInfo.departmentId
-                this.departmentName = this.deviceInfo.departmentName
                 this.deviceId = this.deviceInfo.id
-                this.name = this.deviceInfo.deviceName
-                this.runStatus = this.deviceInfo.runStatus
-                this.errorStatus = this.deviceInfo.execptionStatus
-                this.status = this.deviceInfo.checkResult
-                this.code = this.deviceInfo.deviceCode
-                this.checkId = this.deviceInfo.checkId
-                this.getComponentReplaceConfig()
+                this.$http(this.$API.loadDeviceInfo, {deviceId:this.deviceId}, true).then((res) => {
+                if(res){
+                  this.departmentName = res.departmentName
+                  this.departmentId = res.departmentId
+                  this.deviceId = res.id
+                  this.name = res.deviceName
+                  this.runStatus = res.runStatus
+                  this.errorStatus = res.execptionStatus
+                  this.status = res.checkResult
+                  this.code = res.deviceCode
+                  this.checkId = res.checkId
+                  this.getComponentReplaceConfig();
+                    }
+                });
             }
         },
 

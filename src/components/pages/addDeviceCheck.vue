@@ -222,7 +222,12 @@ export default {
         this.$http(this.$API.addDeviceCheckRecord, data, true).then((res) => {
           if(res){
             this.$commom.alert('添加成功');
-            window.location.href = this.url + '/#/operaionManage/spotCheck?department='+this.departmentInfo;
+            this.$router.push({
+                name: `componentCheck`,
+                query: {
+                deviceId:this.deviceId,
+                }
+            })
           }
         });
       },
