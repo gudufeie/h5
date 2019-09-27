@@ -23,11 +23,8 @@
     name: "personality",
     data: function () {
       return {
-        //用户信息
-        userInfo: {id:'123456',name:'xjb',account: 'xjb',phone:'123456',},
-        // userInfo: getUserInfo,
-        //企业名称
-        enterprises: [{name:'工业云'},{name:'阔以呀'}],
+        userInfo: {},
+        enterprises: [],
       }
     },
     created: function () {
@@ -38,10 +35,7 @@
     methods: {
       //获取个人信息
       getUserInfo: function () {
-        let data = {
-           // account: this.userName,
-           // password: this.password,
-        };
+        let data = {};
         if (this.$route.query.type) {
           data.openId = JSON.parse(localStorage.getItem('wechat_id'));
           data.nickName = JSON.parse(localStorage.getItem('wechat_name')) || '';
@@ -56,9 +50,7 @@
       },
       //退出登录
       loginOutFn: function () {
-        let data = {
-
-        };
+        let data = {};
         if (this.$route.query.type) {
           data.openId = JSON.parse(localStorage.getItem('wechat_id'));
           data.nickName = JSON.parse(localStorage.getItem('wechat_name')) || '';
@@ -74,17 +66,12 @@
       },
       showDefaultPage: function () {
         this.$router.push({
-          //跳转的路径
-          path: '/',
           name: 'login',
         });
       },
       //路由跳转到修改密码路由跳转到个人信息
       personalityInformation: function () {
-        //核心语句
         this.$router.push({
-          //跳转的路径
-          path: '/personalityInformation',
           name: 'personalityInformation',
           query:{
             userInfo: this.userInfo,
@@ -93,18 +80,13 @@
       },
       //路由跳转到修改密码
       changePassword: function () {
-        //核心语句
         this.$router.push({
-          //跳转的路径
-          path: '/changePassword',
           name: 'changePassword',
         })
       },
       //路由跳转到企业切换
       enterpriseSwitch: function () {
         this.$router.push({
-          //跳转的路径
-          path: '/enterpriseSwitch',
           name: 'enterpriseSwitch',
           query:{
             enterprises: this.enterprises,

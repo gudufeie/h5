@@ -38,7 +38,7 @@
               <tr>
                 <th>设备名称</th>
                 <th style="width:130px;" @click="leapfrogSort('update_time', sort1)">最后点巡检时间 <font-awesome-icon :icon="['fa','sort']" size="lg" /></th>
-                <th>负责人</th>
+                <th>执行人</th>
                 <th>结果</th>
               </tr>
             </thead>
@@ -62,7 +62,7 @@
               <tr>
                 <th>部件名称</th>
                 <th style="width:130px;" @click="leapfrogSort('update_time', sort1)">最后点巡检时间 <font-awesome-icon :icon="['fa','sort']" size="lg" /></th>
-                <th>负责人</th>
+                <th>执行人</th>
                 <th>结果</th>
               </tr>
             </thead>
@@ -74,11 +74,11 @@
                 <td>{{record.check_result == 1?'正常':record.check_result == 2?'轻度故障':record.check_result == 3?'中度故障':'重故障'}}</td>
               </tr>
               <tr class="openmore">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td @click="toComponentDotCheck()"  class="slideMore"><span style="color: #3967DC">展开</span> >></td>
-            </tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td @click="toComponentDotCheck()"  class="slideMore"><span style="color: #3967DC">展开</span> >></td>
+              </tr>
             </tbody>
           </x-table>
 
@@ -95,7 +95,7 @@
                 <th>设备名称</th>
                 <th>设备编号</th>
                 <th @click="leapfrogSort2('update_time', sort2, 2)">更换时间 <font-awesome-icon :icon="['fa','sort']" size="lg" /></th>
-                <th>操作人</th>
+                <th>执行人</th>
               </tr>
             </thead>
             <tbody>
@@ -106,10 +106,10 @@
                 <td>{{record.operatorName}}</td>
               </tr>
               <tr class="openmore">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td @click="toDeviceReplaceList" class="slideMore"><span style="color: #3967DC">展开</span> >></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td @click="toDeviceReplaceList" class="slideMore"><span style="color: #3967DC">展开</span> >></td>
               </tr>
             </tbody>
           </x-table>
@@ -119,7 +119,7 @@
                 <th>部件名称</th>
                 <th>部件编号</th>
                 <th @click="leapfrogSort2('update_time', sort2, 2)">更换时间 <font-awesome-icon :icon="['fa','sort']" size="lg" /></th>
-                <th>操作人</th>
+                <th>执行人</th>
               </tr>
             </thead>
             <tbody>
@@ -130,11 +130,11 @@
                 <td>{{record.operator}}</td>
               </tr>
               <tr class="openmore">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td @click="toComponentReplaceList" class="slideMore"><span style="color: #3967DC">展开</span> >></td>
-            </tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td @click="toComponentReplaceList" class="slideMore"><span style="color: #3967DC">展开</span> >></td>
+              </tr>
             </tbody>
           </x-table>
         </div>
@@ -144,7 +144,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
   #app, .content{
     width: 100% !important;
     height: 100% !important;
@@ -200,9 +200,8 @@
   .vux-table{
     width:100%;
   }
-  .vux-table:after{border: none!important;}
-  /* .vux-table thead tr{width: 100%} */
-  .openmore td:before{border: none!important;}
+  .vux-table:after{border: none !important;}
+  .openmore td:before{border: none !important;}
 
 
   .flex-demo {

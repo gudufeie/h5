@@ -49,17 +49,20 @@
                     <tbody>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check1-'+index" @click="addComponentCheck(item)" v-show="item.checkResult == 1">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime | formatDate}}</td>
+                        <td v-if="item.lastCheckTime">{{item.lastCheckTime | formatDate}}</td>
+                        <td v-else>-</td>
                         <td style="color:red">可执行</td>
                     </tr>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check2-'+index" @click="spotCheckDetail(item)" v-show="item.checkResult == 3">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime | formatDate}}</td>
+                        <td v-if="item.lastCheckTime">{{item.lastCheckTime | formatDate}}</td>
+                        <td v-else>-</td>
                         <td>已完成</td>
                     </tr>
                     <tr v-for="(item,index) in cpmponentCheckDatas" :key="'check3-'+index" v-show="item.checkResult == 2">
                         <td>{{item.componentName}}</td>
-                        <td>{{item.lastCheckTime | formatDate}}</td>
+                        <td v-if="item.lastCheckTime">{{item.lastCheckTime | formatDate}}</td>
+                        <td v-else>-</td>
                         <td>不需要</td>
                     </tr>
                     </tbody>
@@ -207,7 +210,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="less">
     body{
         background-color: #22233f;
         height: 100%;
@@ -270,6 +273,9 @@ export default {
     }
     .vux-table:after{
         border-top: none !important;
+    }
+    .info_wrap table{
+        border:none !important;
     }
 </style>
 

@@ -20,9 +20,6 @@
         <img class="toRight" src="../../assets/icon/toRight.png" alt="">
       </div>
     </div>
-    <div class="tree">
-      <organization :selectDepartment="curDepartment"></organization>
-    </div>
     <shortcut-menu></shortcut-menu>
   </div>
 </template>
@@ -33,7 +30,6 @@
   import 'swiper/dist/css/swiper.min.css';
   import { Flexbox, FlexboxItem, Search  } from 'vux';
   import ShortcutMenu from "../../components/common/shortcut_menu.vue";
-  import Organization from "../../components/common/organization.vue";
 
   export default {
     components: {
@@ -41,12 +37,10 @@
       FlexboxItem,
       Search ,
       "shortcut-menu":ShortcutMenu,
-      Organization
     },
     name: "structure",
     data: function () {
       return {
-        treeData: {},
         //组织架构人员
         structurePerson: [],
         //组织架构名称
@@ -65,22 +59,11 @@
         this.structurePerson = this.personList = res.users;
         this.structureNames = this.structureList = res.departments;
       })
-      this.getOrganization()
     },
 
      mounted(){
-       this.curDepartment = {
-        name:'全企业',
-        id:1
-       }
       },
     methods: {
-      getOrganization: function(){
-          this.$http(this.$API.getMyOrganization,{},true).then((data)=>{
-              let a = data[0]
-              this.treeData = a
-          })
-      },
       deviceManage: function(){
         this.$router.push({name: 'manage'});
       },
@@ -301,9 +284,7 @@
   .structure /deep/ .weui-search-bar__cancel-btn{
     color:#fff !important;
   }
-  .tree{
-    position: absolute;
-    top: 100px;
-    width: 100%;
+  .department{
+    width:20%;
   }
 </style>

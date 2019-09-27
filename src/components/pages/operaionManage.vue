@@ -1,10 +1,15 @@
 <template>
     <div class="main_wrap">
         <div class="department">
-            <department-selected
+            <!-- <department-selected
                 :selectedDepartment="curDepartment"
                 @department_selected="departmentSelected"
-            ></department-selected>
+            ></department-selected> -->
+            <organization 
+                class="changeDep"
+                :selectDepartment="curDepartment"
+                @department_select="departmentSelected">
+            </organization>
         </div>
         <div class="content_wrap">
             <div class="chart">
@@ -36,14 +41,16 @@
 import { Grid, GridItem, XHeader } from 'vux'
 const echarts = require('echarts');
 import request from '../../config/request.js';
-import DepartmentSelected from "../common/service-department-select"
+import DepartmentSelected from "../common/service-department-select";
+import Organization from "../common/organization"
 
 export default {
     components: {
         XHeader,
         Grid,
         GridItem,
-        DepartmentSelected
+        DepartmentSelected,
+        Organization
     },
     data(){
         return {
@@ -55,8 +62,11 @@ export default {
             spotCheckNum: 0,
             replaceRecordNum: 0,
             url:'',
-            curDepartment: null,
-            departmentId:1
+            curDepartment: {
+                name:'全企业',
+                id:'1'
+            },
+            departmentId:'1'
         }
     },
     created: function(){
@@ -67,6 +77,14 @@ export default {
         }
         for (let item of userInfo.roleAction) {
             this.userActionMap[item.pageId] = item;
+        }
+        this.getRecordsData();
+        this.getToDealNum();
+    },
+    mounted(){
+        this.curDepartment ={
+            name:'全企业',
+            id:'1'
         }
     },
     methods:{
@@ -123,9 +141,13 @@ export default {
         },
 
         departmentSelected: function(params) {
-            
-            this.curDepartment = params.department;
-            this.departmentId = this.curDepartment.id;
+            if(!!params.id){
+                this.curDepartment = params;
+                this.departmentId = params.id;
+            } 
+            else{
+                this.departmentId = this.curDepartment.id
+            }       
             this.getRecordsData();
             this.getToDealNum();
         },
@@ -376,14 +398,17 @@ export default {
     }
 
     .department{
+        height: 20px;
         color:#ffffff;
         width: 100%;
         padding: 11px 0;
         background: #03061c;
-        text-align: center;
         position: absolute;
         z-index: 99;
         top: 0;
+    }
+    .department .header{
+        width:100% !important;
     }
     .chart{
         padding-top: 60px;

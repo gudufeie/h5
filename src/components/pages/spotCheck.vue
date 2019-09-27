@@ -1,14 +1,19 @@
 <template>
     <div class="main_wrap">
       <div class="deivceTop" style="position: fixed;top: 0;z-index: 110;background-color:rgba(0,0,0,0.3)">
-        <device-selected 
+        <!-- <device-selected 
           ref = 'selectDepart'
           class="changeDep" 
           :options='selectDepartment'
           v-on:deviceDetail="handleDeviceDetail" 
           v-on:departmentDetail='handleDepartment' 
           :deviceName="departmentDetail ? departmentDetail.departmentName : '未选择'">
-        </device-selected>
+        </device-selected> -->
+        <organization 
+          class="changeDep"
+          :selectDepartment="selectDepartment"
+          @department_select="handleDepartment">
+        </organization>
         <div class="changeMore" @click="changeMore">{{checkMore}} <span class="iconfont icon-shaixuan"></span></div>
         <div class="scan" @click="scanAdd"><span class="iconfont">&#xe648;</span></div>
         <div @click="backToHomepage" class="backTo"><span class="iconfont">&#xe610;</span></div>
@@ -103,7 +108,8 @@ import ChangeManage2 from "../../assets/icon/addChange.png"
 import request from '../../config/request.js';
 import DeviceSelected from "../common/device-selected-detail-device"
 import BScroll from "better-scroll";
-import MescrollVue from "mescroll.js/mescroll.vue"
+import MescrollVue from "mescroll.js/mescroll.vue";
+import Organization from "../common/organization"
 let _this = null
 
 export default {
@@ -120,7 +126,8 @@ export default {
         ButtonTab,
         ButtonTabItem,
         BScroll,
-        MescrollVue
+        MescrollVue,
+        Organization
     },
   data(){
     return {
@@ -128,7 +135,7 @@ export default {
       departmentId:'',
       tabIndex: 0,
       tltles: [],
-      demo2: '添加点巡检',
+      demo2: '可执行',
       spotCheckImg:ScanSpot2,
       changeManageImg:ChangeManage1,
       showCheckDatas:[],
@@ -222,15 +229,15 @@ export default {
     }
 
     if(this.userActionMap['wechat_manage']['actions'].indexOf('添加点巡检') >= 0){
-        this.tltles.push('添加点巡检')
+        this.tltles.push('可执行')
     }
     if(this.userActionMap['wechat_manage']['actions'].indexOf('查看点巡检记录') >= 0){
-        this.tltles.push('点巡检记录')
+        this.tltles.push('历史记录')
     }
     this.loadData();
     this.getUserInfo();
-    this.getCheckConfigNum();
-    this.getCheckRecordNum();
+    // this.getCheckConfigNum();
+    // this.getCheckRecordNum();
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -245,9 +252,7 @@ export default {
     this.$nextTick(() => {
       this.Scroll = new BScroll(this.$refs.mescroll,{click: true, tap: true});
     });
-    this.selectDepartment ={
-      departmentInfo:this.departmentInfo
-    }
+    this.selectDepartment = this.departmentInfo
   },
   methods:{
     getDomin: function(){
@@ -329,6 +334,7 @@ export default {
         this.$http(this.$API.deviceCheckRecordList, params, true).then(res => {
           if (res.content) {
             let data = res.content;
+            this.number = res.totalElements;
             if (page.num === 1) {
               this.showCheckDatas = [];
             }
@@ -356,6 +362,7 @@ export default {
         this.$http(this.$API.loadDeviceCheckRecords, params, true).then(res => {
           if (res.content) {
             let data = res.content;
+            this.number = res.totalElements;
             if (page.num === 1) {
               this.showCheckRecordDatas = [];
             }
@@ -500,16 +507,14 @@ export default {
     // 部门筛选
     handleDepartment: function(departmentDetail){
       this.departmentInfo = departmentDetail;
-      this.selectDepartment ={
-        departmentInfo:departmentDetail
-      }
+      this.selectDepartment = this.departmentInfo;
       this.departmentId = departmentDetail.id;
       this.mescroll.triggerDownScroll();
-      if(this.tabIndex == 0){
-        this.getCheckConfigNum();
-      }else{
-        this.getCheckRecordNum();
-      }
+      // if(this.tabIndex == 0){
+      //   this.getCheckConfigNum();
+      // }else{
+      //   this.getCheckRecordNum();
+      // }
       localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
     },
 
@@ -517,11 +522,11 @@ export default {
     overBtn: function () {
       this.showMore = false;
       this.mescroll.resetUpScroll(true);
-      if(this.tabIndex == 0){
-        this.getCheckConfigNum();
-      }else{
-        this.getCheckRecordNum();
-      }
+      // if(this.tabIndex == 0){
+      //   this.getCheckConfigNum();
+      // }else{
+      //   this.getCheckRecordNum();
+      // }
     },
 
     reset:function(){
@@ -633,12 +638,10 @@ export default {
     width: 100%;
     height: 50px;
     background: #22233f;
-    text-align: center;
     .changeDep{
         width: 28%;
         height: 50px;
         font-size: 20px;
-        line-height: 50px;
         padding: 0 0 0 10px;
         color: #ffffff;
     }
@@ -792,6 +795,14 @@ export default {
   }
 </style>
 <style>
+    .organization .header{
+      padding:18px 10px;
+      width: 28%;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+      white-space:nowrap !important;
+      word-break:keep-all !important;
+    }
     .vux-tab-container{
       z-index: 99;
     }

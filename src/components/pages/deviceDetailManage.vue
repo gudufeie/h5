@@ -29,7 +29,7 @@
       <span>设备名称</span>
       <span>设备编号</span>
       <span @click="leapfrogSort('run', sort2)">是否运行 <font-awesome-icon :icon="['fa','sort']" size="lg" /></span>
-      <span>运行状态</span>
+      <span>设备状态</span>
     </div>
     <div class="dataContent" ref="dataContent">
       <div class="deviceTable">

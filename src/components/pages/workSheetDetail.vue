@@ -41,6 +41,10 @@
                         <td class="name">点巡检时间</td>
                         <td v-if="checkTime">{{checkTime | formatDate}}</td>
                     </tr>
+                    <tr>
+                        <td class="name">执行人</td>
+                        <td>{{operatorName}}</td>
+                    </tr>
                 </table>
             </div>
             <div class="spotCheckDescribe">
@@ -109,7 +113,8 @@ export default {
             dealStatus:'',
             pictures:[],
             checkRecordId:'',
-            workSheetList:{}
+            workSheetList:{},
+            operatorName:''
         }
     },
    created() {
@@ -123,7 +128,8 @@ export default {
     methods: {
         getRouterData() {
             var param = {}
-            this.CheckInfo = this.$route.query
+            this.CheckInfo = this.$route.query;
+            this.operatorName = this.CheckInfo.CheckInfo.operatorName
             if(!this.CheckInfo.queryName){
                 this.checkRecordId = this.CheckInfo.id   
                 this.getWorkSheet(this.checkRecordId);        

@@ -2,15 +2,11 @@
   <div class="addReplaceManage">
     <div class="main">
       <div class="deivceTop">
-        <device-selected 
-          ref = 'selectDepart'
-          class="changeDep" 
-          :options='selectDepartment'
-          v-on:deviceDetail="handleDeviceDetail" 
-          v-on:departmentDetail='handleDepartment' 
-          @showSearch="showSearch" 
-          :deviceName="departmentDetail ? departmentDetail.departmentName : '未选择'">
-        </device-selected>
+        <organization 
+          class="changeDep"
+          :selectDepartment="selectDepartment"
+          @department_select="handleDepartment">
+        </organization>
         <div class="changeMore" @click="changeMore">{{checkMore}} <span class="iconfont icon-shaixuan"></span></div>
         <div class="scan" @click="scanAdd"><span class="iconfont">&#xe648;</span></div>
         <div @click="backToHomepage" class="backTo"><span class="iconfont">&#xe610;</span></div>
@@ -125,6 +121,7 @@
   import DeviceSelected from "../common/device-selected-detail-device"
   import BScroll from "better-scroll";
   import MescrollVue from "mescroll.js/mescroll.vue";
+  import Organization from "../common/organization"
   let _this = null;
   export default {
     components: {
@@ -138,7 +135,8 @@
       SwiperItem,
       DeviceSelected,
       BScroll,
-      MescrollVue
+      MescrollVue,
+      Organization
     },
     name: "addReplaceManage",
     data: function () {
@@ -244,8 +242,8 @@
       for (let item of userInfo.roleAction) {
         this.userActionMap[item.pageId] = item;
       }
-      this.getReplaceConfigNum();
-      this.getReplaceReocrdNum();
+      // this.getReplaceConfigNum();
+      // this.getReplaceReocrdNum();
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -260,9 +258,7 @@
       this.$nextTick(() => {
           this.Scroll = new BScroll(this.$refs.mescroll,{click: true, tap: true});
       });
-      this.selectDepartment ={
-        departmentInfo:this.departmentInfo
-      }
+      this.selectDepartment = this.departmentInfo
     },
     methods: {
       getDomin: function(){
@@ -365,6 +361,7 @@
           };
           this.$http(this.$API.loadDeviceReplaceConfig, params, true).then(res => {
             if (res.content) {
+              this.number = res.totalElements;
               let data = [];
               for(var item of res.content){
                 if(!!item){
@@ -397,6 +394,7 @@
           };
           this.$http(this.$API.loadDeviceReplaceRecord, params, true).then(res => {
             if (res.content) {
+              this.number = res.totalElements;
               let data = res.content;
               if (page.num === 1) {
                 this.replaceRecordData = [];
@@ -512,16 +510,14 @@
       // 部门筛选并分页
       handleDepartment: function(departmentDetail){
         this.departmentInfo = departmentDetail;
-        this.selectDepartment ={
-          departmentInfo:departmentDetail
-        }
+        this.selectDepartment = this.departmentInfo
         this.departmentId = departmentDetail.id;
         this.mescroll.triggerDownScroll();
-        if(this.tabIndex == 0){
-          this.getReplaceConfigNum();
-        }else{
-          this.getReplaceReocrdNum();
-        }
+        // if(this.tabIndex == 0){
+        //   this.getReplaceConfigNum();
+        // }else{
+        //   this.getReplaceReocrdNum();
+        // }
         localStorage.setItem('curDepartment',JSON.stringify(this.departmentInfo))
       },
 
@@ -552,11 +548,11 @@
       overBtn: function () {
         this.showMore = false;
         this.mescroll.resetUpScroll(true);
-        if(this.tabIndex == 0){
-          this.getReplaceConfigNum();
-        }else{
-          this.getReplaceReocrdNum();
-        }
+        // if(this.tabIndex == 0){
+        //   this.getReplaceConfigNum();
+        // }else{
+        //   this.getReplaceReocrdNum();
+        // }
       },
 
     // 获取点巡检和更换可操作的数量
@@ -603,7 +599,6 @@
     width: 100%;
     height: 50px;
     background: rgba(0,0,0,0.3);
-    text-align: center;
     position: fixed;
     top: 0px;
     z-index: 110;
@@ -611,7 +606,6 @@
         width: 28%;
         height: 50px;
         font-size: 20px;
-        line-height: 50px;
         padding: 0 0 0 10px;
         color: #ffffff;
     }
@@ -791,7 +785,7 @@
         background: #22233f;
         position: fixed;
         top: 45px;
-        z-index: 110;
+        z-index: 50;
         /*height: 40px;*/
         div{
           width: 100%;
@@ -845,7 +839,7 @@
         position: fixed;
         width: 100%;
         bottom: 0;
-        z-index:999;
+        z-index:50;
         .footerTab{
           position: fixed;
           padding: 0;
@@ -983,6 +977,14 @@
   
 </style>
 <style>
+  .organization .header{
+    padding:18px 10px;
+    width: 28%;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    white-space:nowrap !important;
+    word-break:keep-all !important;
+  }
   .vux-popup-mask.vux-popup-show{
     z-index: unset !important;
   }

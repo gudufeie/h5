@@ -22,28 +22,38 @@
         <div class="mask" v-show="show3" @click="showVuePopup3(false)"></div>
       </div>
       <div class="contentWrap">
-        <x-table :cell-bordered="false">
+        <div class='dataNum'>共{{number}}条记录</div>
+        <x-table :cell-bordered="false" style="top:20px;">
             <thead>
               <tr>
-                  <td>设备/部件</td>
-                  <td>最后提醒时间<font-awesome-icon :icon="['fa','sort']" size="lg"/></td>
-                  <td>工单状态</td>
+                  <td style="width:100px">设备/部件</td>
+                  <td style="width:110px">最后提醒时间
+                    <font-awesome-icon 
+                      :icon="['fa','sort']" 
+                      size="lg" 
+                      @click="sort('updateTime', sort1)"/>
+                  </td>
+                  <td style="width:80px">工单状态</td>
                   <td>处理状态</td>
               </tr>
             </thead>
             <mescroll-vue class="me_scroll" ref="mescroll" :down="mescrollDown" :up="mescrollUp" @init="mescrollInit">
-            <tbody>
-              <tr v-for="(item, index) in errorWorkSheetDatas" :key="index" @click="exceptionDetail(item)">
-                  <td>{{!!item.componentName?item.componentName:item.deviceName}}</td>
-                  <td>{{item.updateTime | formatDate}}</td>
-                  <td v-if="item.handleType == 1">上报</td>
-                  <td v-else-if="item.handleType == 2">转办</td>
-                  <td v-else-if="item.handleType == 3">解决</td>
-                  <td v-else-if="item.handleType == 4">驳回</td>
-                  <td v-if="item.workSheetType == 1" style="color:#456de6">已解决</td>
-                  <td v-else style="color:red">未解决</td>
-              </tr>
-            </tbody>
+              <x-table :cell-bordered="false">
+              <tbody>
+                <tr v-for="(item, index) in errorWorkSheetDatas" :key="index" @click="exceptionDetail(item)">
+                    <td style="width:100px">{{!!item.componentName?item.componentName:item.deviceName}}</td>
+                    <td style="width:110px">{{item.endRemindTime | formatDate}}</td>
+                    <td v-if="item.errHandleType == 0" style="width:90px">未处理</td>
+                    <td v-else-if="item.errHandleType == 1" style="width:90px">上报</td>
+                    <td v-else-if="item.errHandleType == 2" style="width:90px">转办</td>
+                    <td v-else-if="item.errHandleType == 3" style="width:90px">解决</td>
+                    <td v-else-if="item.errHandleType == 4" style="width:90px">驳回</td>
+                    <td v-else style="width:90px">未处理</td>
+                    <td v-if="item.errHandleStatus == 1" style="color:#456de6">已解决</td>
+                    <td v-else style="color:red">未解决</td>
+                </tr>
+              </tbody>
+              </x-table>
             </mescroll-vue>
         </x-table>
       </div>
@@ -70,6 +80,7 @@ export default {
     },
   data(){
       return {
+        number:0,
         nowColor:'',
         departmentId:0,
         errorWorkSheetDatas:[],
@@ -133,57 +144,73 @@ export default {
     });
   },
   methods:{
-      // 获取登陆用户信息
-      // getUserInfo:function(){
-      //   this.$http(this.$API.getUserInfo,{},true).then((res)=>{
-      //     this.departmentId = res.department
-      //     this.$http(this.$API.loadExecWorkSheet,{departmentId:this.departmentId},true).then((data)=>{
-      //       this.errorWorkSheetDatas = this.errorWorkSheetList = data.workSheets
-      //     })
-      //   })
-      // },
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+    },
 
-      mescrollInit(mescroll) {
-        this.mescroll = mescroll;
-      },
-
-      upCallback(page, mescroll) {
-        let params = {
-          departmentId:this.departmentId,
-          deviceName:this.deviceNameSpot,
-          deviceCode:this.deviceCodeSpot,
-          componentName:this.componentName,
-          componentCode:this.componentCode,
-          handleType:this.ind,
-          pageNum: page.num,
-          pageSize: page.size,
-        };
-        this.$http(this.$API.loadExecWorkSheet, params, true).then(res => {
-          if (res) {
-            let data = res;
-            if (page.num === 1) {
-              this.errorWorkSheetList = [];
-            }
-            this.errorWorkSheetList = this.errorWorkSheetList.concat(data);
-            this.errorWorkSheetDatas = this.errorWorkSheetList;
-            this.$nextTick(() => {
-              mescroll.endSuccess(data.length);
-            });
-          } else {
-            this.mescroll.endErr();
+    upCallback(page, mescroll) {
+      let params = {
+        departmentId:this.departmentId,
+        deviceName:this.deviceNameSpot,
+        deviceCode:this.deviceCodeSpot,
+        componentName:this.componentName,
+        componentCode:this.componentCode,
+        handleType:this.ind,
+        pageNum: page.num,
+        pageSize: page.size,
+      };
+      this.$http(this.$API.loadExecWorkSheet, params, true).then(res => {
+        if (res.content) {
+          this.number = res.totalElements;
+          let data = res.content;
+          if (page.num === 1) {
+            this.errorWorkSheetList = [];
           }
-        });
-      },
+          this.errorWorkSheetList = this.errorWorkSheetList.concat(data);
+          this.errorWorkSheetDatas = this.errorWorkSheetList;
+          this.$nextTick(() => {
+            mescroll.endSuccess(data.length);
+          });
+        } else {
+          this.mescroll.endErr();
+        }
+      });
+    },
 
-      changeBgc: function (index) {
-        this.ind = index
-      },
-      showVuePopup3(flag) {
+    changeBgc: function (index) {
+      this.ind = index
+    },
+    showVuePopup3(flag) {
       if (flag === false){
         this.showMore = false;
       }
       this.show3 = flag;
-      },
+    },
+
+    // 排序
+    sort(type, sorted) {
+      if (sorted === false) {
+        this.sort1 = true;
+        this.errorWorkSheetDatas.sort(this.compare(type));
+      }else{
+        this.sort1 = false;
+        this.errorWorkSheetDatas.sort(this.compare2(type));
+      }
+    },
+    compare(attr) {
+      return function(a,b){
+          var x = a[attr];
+          var y = b[attr];
+          return ((x>y)?-1:(x<y)?1:0)
+      }
+    },
+    compare2(attr) {
+      return function(a,b){
+          var x = a[attr];
+          var y = b[attr];
+          return ((x<y)?-1:(x>y)?1:0)
+      }
+    },
 
     //切换部门
     changeDep: function () {
@@ -228,6 +255,8 @@ export default {
       this.componentName = '',
       this.componentCode = ''
     },
+
+    // 跳转异常详情
     exceptionDetail: function(item){
       this.$router.push({
         name:'remindManageDetail',
@@ -241,6 +270,15 @@ export default {
 </script>
 <style  lang="less" scoped>
   @import '../../styles/iconfont.css';
+  .main_wrap{
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    padding-bottom: unset !important;
+  }
+  .contentWrap{
+    padding-top: 20px;
+  }
   .deivceTop{
     width: 100%;
     height: 50px;
@@ -363,15 +401,32 @@ export default {
     z-index: 999;
   }
   .me_scroll {
-    top: 135px;
+    top: 120px;
     position: fixed;
     bottom: 130px;
-    height: 56%;
+    height: 85%;
   }
-  .mescroll {
+  table{
+    width: 100%;
+    table-layout:fixed;
+    color:#fff !important;
+  }
+
+  table td{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  table thead{
+    background-color: #18182c;
+  }
+  .dataNum{
     position: fixed;
-    bottom: 130px;
-    height: 65%;
+    width: 100%;
+    line-height: 30px;
+    color: #fff;
+    text-align: left;
+    padding-left: 15px;
   }
 </style>
 <style>
@@ -418,20 +473,6 @@ export default {
         background-color: #22233f;
         height: 100%;
         width: 100%;
-    }
-    .main_wrap{
-        margin: 0 auto;
-        height: 100%;
-        width: 100%;
-        padding-bottom: unset !important;
-    }
-    .contentWrap{
-        /*height: 80%;*/
-      padding-top: 40px;
-    }
-    table{
-      color:#fff !important;
-      margin-top: 13px;
     }
 </style>
 

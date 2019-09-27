@@ -97,15 +97,15 @@
       },
       getWorkSheetInfo: function(){
         this.workSheetInfo = this.$route.query.workSheetInfo;
-        if(this.workSheetInfo.handleState == 2){
-          this.buttonShow = false;
-        }else{
+        if(this.workSheetInfo.errHandleStatus == 0){
           this.buttonShow = true;
+        }else{
+          this.buttonShow = false;
         }
         this.$http(this.$API.loadExceptWorkSheetRecord,
-                  {workSheetId:this.workSheetInfo.id},true).then((data)=>{
-                    this.workSheetDetail = data.workSheetHandles
-                  })
+          {workSheetId:this.workSheetInfo.id},true).then((data)=>{
+            this.workSheetDetail = data.workSheetHandles
+          })
 
          // 工单处理详情
         this.$http(this.$API.getWorkSheetInfo,{id:this.workSheetInfo.id},true).then((data)=>{
